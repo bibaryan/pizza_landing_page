@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ryan's Pizza 雷恩披薩 - Delicious Authentic Pizza!</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Lilita+One&family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styles */
+        body {
+            font-family: 'Inter', 'Noto Sans TC', sans-serif; /* Noto Sans TC for Chinese */
+            background-color: #FFF8E1; /* Creamy background, like pizza dough */
+        }
+        .header-font {
+            font-family: 'Lilita One', cursive; /* Fun, bold font for headings */
+        }
+        .lang-zh { display: none; } /* Hide Chinese by default */
+
+        .pizza-card {
+            background-color: #FFFAF0; /* Lighter cream for cards */
+            border: 2px solid #FDBF6F; /* Crust-like border */
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+        .pizza-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .pizza-image {
+            width: 100%;
+            height: 200px; /* Fixed height for images */
+            object-fit: cover; /* Ensures images cover the area nicely */
+            border-bottom: 2px solid #FDBF6F;
+        }
+        .status-available {
+            background-color: #4CAF50; /* Green */
+            color: white;
+        }
+        .status-soldout {
+            background-color: #F44336; /* Red */
+            color: white;
+        }
+        .btn-lang {
+            transition: background-color 0.3s ease;
+        }
+        .btn-lang.active {
+            background-color: #FFA000; /* Amber 700 */
+            color: white;
+        }
+        .btn-lang:not(.active):hover {
+            background-color: #FFECB3; /* Amber 100 */
+        }
+    </style>
+</head>
+<body class="bg-yellow-50 text-gray-800">
+
+    <div class="language-switcher text-center py-4 bg-red-700 shadow-md">
+        <button id="lang-en-btn" onclick="setLanguage('en')" class="btn-lang active text-white bg-red-500 hover:bg-red-600 font-bold py-2 px-6 rounded-l-lg text-lg mx-1">English</button>
+        <button id="lang-zh-btn" onclick="setLanguage('zh')" class="btn-lang text-white bg-red-500 hover:bg-red-600 font-bold py-2 px-6 rounded-r-lg text-lg mx-1">繁體中文</button>
+    </div>
+
+    <div class="container mx-auto px-4 py-8">
+        <header class="text-center mb-12">
+            <h1 class="header-font text-6xl md:text-7xl font-bold text-red-600">
+                <span class="lang-en">Ryan's Pizza</span>
+                <span class="lang-zh">雷恩披薩</span>
+            </h1>
+            <p class="text-xl text-gray-600 mt-2">
+                <span class="lang-en">Authentic Handcrafted Pizzas</span>
+                <span class="lang-zh">正宗手工披薩</span>
+            </p>
+        </header>
+
+        <section id="pizza-menu">
+            <h2 class="header-font text-4xl md:text-5xl font-semibold text-center text-yellow-600 mb-10">
+                <span class="lang-en">Our Menu</span>
+                <span class="lang-zh">我們的菜單</span>
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                </div>
+        </section>
+
+        <section class="order-info text-center mt-16 py-10 bg-red-100 rounded-xl shadow-lg border-2 border-red-300">
+            <h2 class="header-font text-4xl font-semibold text-red-700 mb-6">
+                <span class="lang-en">Order Now!</span>
+                <span class="lang-zh">立即訂購！</span>
+            </h2>
+            <p class="text-2xl font-bold text-gray-700 mb-4">
+                <span class="lang-en">Phone:</span>
+                <span class="lang-zh">電話訂購：</span>
+                <a href="tel:0955276656" class="text-blue-600 hover:text-blue-800">0955-276-656</a>
+            </p>
+            <div class="mt-6 inline-block">
+                <img src="M_gainfriends_2dbarcodes_BW.png" alt="Line QR Code" class="w-40 h-40 md:w-48 md:h-48 mx-auto border-4 border-green-500 rounded-lg p-1">
+                <p class="mt-3 text-lg text-gray-600">
+                    <span class="lang-en">Scan to add us on LINE & order via chat!</span>
+                    <span class="lang-zh">掃描QR Code加入LINE好友並透過聊天訂購！</span>
+                </p>
+            </div>
+        </section>
+
+        <footer class="text-center py-8 mt-12 text-gray-500">
+            <p>&copy; <span id="currentYear"></span> Ryan's Pizza 雷恩披薩.
+                <span class="lang-en">All rights reserved.</span>
+                <span class="lang-zh">版權所有。</span>
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        // Pizza Data
+        const pizzaData = [
+            {
+                id: "bee_sting",
+                image: "Bee_String.webp", // Make sure this image is in the same folder
+                name_en: "Bee Sting Pizza",
+                name_zh: "蜂螫披薩",
+                ingredients_en: "San Marzano tomatoes, fresh milk mozzarella, pepperoni, Romano cheese, Parmigiano Reggiano, fresh basil, chili oil, honey.",
+                ingredients_zh: "聖馬爾查諾番茄、新鮮牛乳莫澤瑞拉乾酪、美式臘腸、羅馬諾乾酪、帕瑪森蘿吉諾乾酪、新鮮九層塔、辣椒油、蜂蜜",
+                available: true
+            },
+            {
+                id: "cheese_pizza",
+                image: "Cheese_Pizza.webp",
+                name_en: "Classic Cheese Pizza",
+                name_zh: "經典起司披薩",
+                ingredients_en: "San Marzano tomatoes, fresh milk mozzarella, extra virgin olive oil, Parmigiano Reggiano.",
+                ingredients_zh: "聖瑪莎諾番茄、新鮮牛乳莫澤瑞拉乾酪、特級初榨橄欖油、帕瑪森蘿吉諾乾酪",
+                available: true
+            },
+            {
+                id: "cosacca",
+                image: "Cosacca.webp",
+                name_en: "Cosacca Pizza",
+                name_zh: "科薩卡披薩",
+                ingredients_en: "San Marzano tomatoes, Romano cheese, extra virgin olive oil, fresh basil.",
+                ingredients_zh: "聖瑪莎諾番茄、羅馬諾乾酪、特級初榨橄欖油、新鮮九層塔",
+                available: false // Example: Sold out
+            },
+            {
+                id: "ham_arugula",
+                image: "Ham_and_Arugula.webp",
+                name_en: "Ham and Arugula Pizza",
+                name_zh: "火腿芝麻葉披薩",
+                ingredients_en: "San Marzano tomatoes, fresh milk mozzarella, Serrano ham, arugula, extra virgin olive oil, Parmigiano Reggiano.",
+                ingredients_zh: "聖馬爾查諾番茄、新鮮牛乳莫澤瑞拉乾酪、塞拉諾火腿、芝麻菜、特級初榨橄欖油、帕瑪森蘿吉諾乾酪",
+                available: true
+            },
+            {
+                id: "kings_ham",
+                image: "Kings_Ham.webp",
+                name_en: "King's Ham Pizza",
+                name_zh: "國王火腿披薩",
+                ingredients_en: "Fresh mozzarella, mozzarella, Serrano ham, Parmesan cheese, extra virgin olive oil.",
+                ingredients_zh: "新鮮莫札瑞拉起司、莫札瑞拉起司、塞拉諾火腿、帕瑪森起司、特級初榨橄欖油",
+                available: true
+            },
+            {
+                id: "margherita",
+                image: "Margerita.webp", // Corrected spelling from Margerita to Margherita for consistency if desired
+                name_en: "Margherita Pizza",
+                name_zh: "瑪格麗特披薩",
+                ingredients_en: "San Marzano tomatoes, fresh milk mozzarella, fresh basil, extra virgin olive oil, Romano cheese, Parmigiano Reggiano.",
+                ingredients_zh: "聖瑪莎諾番茄、新鮮牛乳莫澤瑞拉乾酪、新鮮九層塔、特級初榨橄欖油、羅馬諾乾酪、帕瑪森蘿吉諾乾酪",
+                available: true
+            },
+            {
+                id: "marinara",
+                image: "Marinara.webp",
+                name_en: "Marinara Pizza",
+                name_zh: "瑪麗娜拉披薩",
+                ingredients_en: "San Marzano tomatoes, fresh garlic, oregano, extra virgin olive oil, fresh basil.",
+                ingredients_zh: "聖瑪莎諾番茄、新鮮大蒜、奧勒岡葉、特級初榨橄欖油、新鮮九層塔",
+                available: true
+            },
+            {
+                id: "pepperoni",
+                image: "Pepperoni.webp",
+                name_en: "Pepperoni Pizza",
+                name_zh: "義式臘腸披薩",
+                ingredients_en: "San Marzano tomatoes, fresh milk mozzarella, pepperoni, extra virgin olive oil, oregano, Romano cheese, Parmigiano Reggiano.",
+                ingredients_zh: "聖瑪莎諾番茄、新鮮牛乳莫澤瑞拉乾酪、美式臘腸、特級初榨橄欖油、奧勒岡葉、羅馬諾乾酪、帕瑪森蘿吉諾乾酪",
+                available: false // Example: Sold out
+            },
+            {
+                id: "pineapple",
+                image: "Pineapple.webp",
+                name_en: "Pineapple Pizza", // Or "Hawaiian" if preferred
+                name_zh: "鳳梨披薩",
+                ingredients_en: "San Marzano tomatoes, fresh milk mozzarella, fresh pineapple, Serrano ham, extra virgin olive oil, Parmigiano Reggiano.",
+                ingredients_zh: "聖馬爾查諾番茄、新鮮牛乳莫澤瑞拉乾酪、新鮮鳳梨、塞拉諾火腿、特級初榨橄欖油、帕瑪森蘿吉諾乾酪",
+                available: true
+            },
+            {
+                id: "seafood",
+                image: "Seafood.webp",
+                name_en: "Seafood Pizza",
+                name_zh: "海鮮披薩",
+                ingredients_en: "San Marzano tomatoes, fresh mozzarella, mozzarella, seafood, Parmesan cheese, extra virgin olive oil, fresh garlic.",
+                ingredients_zh: "聖瑪莎諾番茄、新鮮莫札瑞拉起司、莫札瑞拉起司、海鮮、帕瑪森起司、特級初榨橄欖油、新鮮大蒜",
+                available: true
+            },
+            {
+                id: "white_pie",
+                image: "White_Pie.webp",
+                name_en: "White Pie",
+                name_zh: "白披薩",
+                ingredients_en: "Fresh mozzarella, mozzarella, Parmesan cheese, extra virgin olive oil.",
+                ingredients_zh: "新鮮莫札瑞拉起司、莫札瑞拉起司、帕瑪森起司、特級初榨橄欖油",
+                available: true
+            }
+        ];
+
+        // Function to set the language
+        function setLanguage(lang) {
+            document.documentElement.lang = lang; // Set HTML lang attribute
+            const elementsEn = document.querySelectorAll('.lang-en');
+            const elementsZh = document.querySelectorAll('.lang-zh');
+            const btnEn = document.getElementById('lang-en-btn');
+            const btnZh = document.getElementById('lang-zh-btn');
+
+            if (lang === 'zh') {
+                elementsEn.forEach(el => el.style.display = 'none');
+                elementsZh.forEach(el => el.style.display = 'inline'); // Or 'block' if appropriate for the element
+                btnEn.classList.remove('active');
+                btnZh.classList.add('active');
+            } else {
+                elementsZh.forEach(el => el.style.display = 'none');
+                elementsEn.forEach(el => el.style.display = 'inline'); // Or 'block'
+                btnZh.classList.remove('active');
+                btnEn.classList.add('active');
+            }
+            // Ensure block elements like h1, p, h2, h3 display correctly
+            document.querySelectorAll('h1 .lang-zh, h1 .lang-en, h2 .lang-zh, h2 .lang-en, p .lang-zh, p .lang-en, h3 .lang-zh, h3 .lang-en').forEach(el => {
+                if (el.style.display !== 'none') el.style.display = 'block';
+            });
+             // Special handling for status spans to ensure they are inline-block
+            document.querySelectorAll('.status-badge .lang-zh, .status-badge .lang-en').forEach(el => {
+                if (el.style.display !== 'none') el.style.display = 'inline-block';
+            });
+        }
+
+        // Function to render pizza menu
+        function renderMenu() {
+            const menuContainer = document.querySelector('#pizza-menu .grid');
+            menuContainer.innerHTML = ''; // Clear existing items
+
+            pizzaData.forEach(pizza => {
+                const statusClass = pizza.available ? 'status-available' : 'status-soldout';
+                const statusTextEn = pizza.available ? 'Available Today' : 'Sold Out';
+                const statusTextZh = pizza.available ? '今日供應' : '已售完';
+
+                const pizzaCard = `
+                    <div class="pizza-card rounded-lg shadow-lg overflow-hidden flex flex-col">
+                        <img src="${pizza.image}" alt="${pizza.name_en}" class="pizza-image">
+                        <div class="p-6 flex flex-col flex-grow">
+                            <h3 class="header-font text-2xl font-semibold text-yellow-700 mb-2">
+                                <span class="lang-en">${pizza.name_en}</span>
+                                <span class="lang-zh">${pizza.name_zh}</span>
+                            </h3>
+                            <p class="text-gray-600 text-sm mb-4 flex-grow">
+                                <span class="lang-en"><strong>Ingredients:</strong> ${pizza.ingredients_en}</span>
+                                <span class="lang-zh"><strong>成份：</strong>${pizza.ingredients_zh}</span>
+                            </p>
+                            <div class="status-badge text-sm font-semibold py-1 px-3 rounded-full self-start ${statusClass}">
+                                <span class="lang-en">${statusTextEn}</span>
+                                <span class="lang-zh">${statusTextZh}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                menuContainer.innerHTML += pizzaCard;
+            });
+        }
+
+        // Set current year in footer
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        // Initial setup
+        window.onload = () => {
+            renderMenu();
+            setLanguage('en'); // Default to English
+        };
+    </script>
+
+</body>
+</html>
