@@ -71,6 +71,18 @@
                 <span class="lang-en">Authentic Handcrafted Pizzas</span>
                 <span class="lang-zh">正宗手工披薩</span>
             </p>
+            <div class="mt-3 text-center">
+                <p class="text-lg text-gray-700">
+                    <span class="lang-en">Hours: 6:00 PM - 1:00 AM</span>
+                    <span class="lang-zh">營業時間：下午6:00 - 上午1:00</span>
+                </p>
+                <p class="mt-2">
+                    <span id="shop-status-badge" class="text-base font-semibold py-1 px-4 rounded-full inline-block">
+                        <span class="lang-en"></span>
+                        <span class="lang-zh"></span>
+                    </span>
+                </p>
+            </div>
         </header>
 
         <section class="order-info text-center mt-0 mb-12 py-10 bg-red-100 rounded-xl shadow-lg border-2 border-red-300">
@@ -319,6 +331,33 @@
             });
         }
 
+        // Function to update shop status
+        function updateShopStatus() {
+            const now = new Date();
+            const currentHour = now.getHours();
+
+            // Shop opens at 6 PM (18) and closes at 1 AM (1) the next day.
+            // So, it's open if currentHour >= 18 (e.g., 6 PM to 11:59 PM)
+            // OR if currentHour < 1 (e.g., 12:00 AM to 12:59 AM).
+            const isOpen = (currentHour >= 18 || currentHour < 1);
+
+            const statusBadge = document.getElementById('shop-status-badge');
+            const statusEnElement = statusBadge.querySelector('.lang-en');
+            const statusZhElement = statusBadge.querySelector('.lang-zh');
+
+            if (isOpen) {
+                statusEnElement.textContent = 'Currently Open';
+                statusZhElement.textContent = '營業中';
+                statusBadge.classList.remove('bg-red-600', 'text-red-100');
+                statusBadge.classList.add('bg-green-600', 'text-green-100');
+            } else {
+                statusEnElement.textContent = 'Currently Closed';
+                statusZhElement.textContent = '休息中';
+                statusBadge.classList.remove('bg-green-600', 'text-green-100');
+                statusBadge.classList.add('bg-red-600', 'text-red-100');
+            }
+        }
+
         // Function to render pizza menu
         function renderMenu() {
             const menuContainer = document.querySelector('#pizza-menu .grid');
@@ -358,6 +397,7 @@
         // Initial setup
         window.onload = () => {
             renderMenu();
+            updateShopStatus(); // Update shop status on load
             setLanguage('en'); // Default to English
         };
     </script>
